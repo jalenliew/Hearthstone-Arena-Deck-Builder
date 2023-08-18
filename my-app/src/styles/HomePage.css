@@ -1,0 +1,14 @@
+.home {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.headers {
+    display: flex;
+    width: 100%;
+}
+
+.text {
+    display: flex;
+    width: 100%;
+}
