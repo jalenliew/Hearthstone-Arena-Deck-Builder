@@ -12,15 +12,14 @@ const AppRouter = () => {
 
     return (
         <BrowserRouter>
-        <Routes>
-            <Route path="/" element={<Navbar />}>
-                <Route index element={<HomePage />} />
-                <Route path="arena" element={<ArenaBuilderPage />} />
-                <Route path="deck" element={<DeckBuilderPage />} />
-                <Route path="cards" element={<CardListPage />} />
+            <Navbar />
+            <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/arena" element={<ArenaBuilderPage />} />
+                <Route path="/deck" element={<DeckBuilderPage />} />
+                <Route path="/cards" element={<CardListPage />} />
                 <Route path="*" element={<NoPage />} />
-            </Route>
-        </Routes>
+            </Routes>
         </BrowserRouter>
     );
 };

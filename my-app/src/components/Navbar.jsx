@@ -1,15 +1,15 @@
 import React from 'react';
 import { Outlet, NavLink } from 'react-router-dom';
-import '../styles/Navbar.css';
+import '../styles/Navbar.scss';
 
 const Navbar = () => {
 
     return (
         <div className='navbar'>
-            <NavLink className={({ isActive }) => isActive ? "selected" : "unselected"} to="/">
+            <NavLink className={({ isActive }) => isActive ? "selected" : "unselected"} to="">
                 Home
             </NavLink>
-            <NavLink className={({ isActive }) => isActive ? "selected" : "unselected"} to="/arena">
+            <NavLink className={({ isActive }) => isActive ? "selected" : "unselected"} to="arena">
                 Arena Deck Builder
             </NavLink>
             <NavLink className={({ isActive }) => isActive ? "selected" : "unselected"} to="deck">
