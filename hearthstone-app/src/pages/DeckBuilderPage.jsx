@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Modal from 'react-modal';
 import Button from '../components/Button';
 import DeathKnight from '../img/Death_Knight_icon.png';
@@ -17,6 +18,8 @@ import '../styles/DeckBuilderPage.scss';
 const DeckBuilderPage = () => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [selectedClass, setSelectedClass] = useState(null);
+
+    const navigate = useNavigate();
     
     const hsClasses = [
         { id: 'deathKnight', name: 'Death Knight', img: DeathKnight},
@@ -36,10 +39,16 @@ const DeckBuilderPage = () => {
     };
     const closeModal = () => {
         setModalIsOpen(false);
+        setSelectedClass(null);
     };
-
     const changeSelectedClass = (selection) => {
         setSelectedClass(selection);
+    };
+
+    const handleCreateConfirm = () => {
+        console.log(selectedClass);
+        setModalIsOpen(false);
+        navigate('new', { state: selectedClass });
     };
 
     return(
@@ -49,16 +58,18 @@ const DeckBuilderPage = () => {
             <Modal
                 isOpen={modalIsOpen}
                 className="classModal"
+                ariaHideApp={false}
             >
                 <h4>Pick a Class</h4>
                 <div className='classes'>
                     {hsClasses.map((hsClass) => {
                         return (
                             <div
-                                className={selectedClass === hsClass.id ? 'selectedClass' : 'class'}
+                                className={selectedClass?.id === hsClass.id ? 'selectedClass' : 'class'}
                                 id={hsClass.id}
+                                key={hsClass.id}
                                 onClick={() => {
-                                    changeSelectedClass(hsClass.id);
+                                    changeSelectedClass(hsClass);
                                 }}
                             >
                                 <img src={hsClass.img} />
@@ -67,9 +78,9 @@ const DeckBuilderPage = () => {
                         );
                     })}
                 </div>
-                <div class='buttons'>
+                <div className='buttons'>
                     <Button text='Cancel' onClick={closeModal} />
-                    <Button text='Confirm' onClick={closeModal} />
+                    <Button text='Confirm' onClick={handleCreateConfirm} isDisabled={selectedClass === null} />
                 </div>
             </Modal>
         </div>

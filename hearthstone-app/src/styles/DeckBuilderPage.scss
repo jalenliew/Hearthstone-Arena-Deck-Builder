@@ -27,13 +27,14 @@
         margin: 1rem;
     }
 
-    .buttons {
+    .buttons {        
         display: flex;
         flex-wrap: wrap;
         flex-direction: row;
         justify-content: space-between;
 
         padding: 1rem;
+        box-sizing: border-box;
     }
 
     .classes {
