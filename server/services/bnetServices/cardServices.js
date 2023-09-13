@@ -5,7 +5,7 @@ const hsCardsURL = 'hearthstone/cards';
 
 const reduceToken = (accessToken) => {
     return accessToken.token.access_token;
-}
+};
 
 const getCard = async (req, res) => {
     try {
@@ -13,12 +13,12 @@ const getCard = async (req, res) => {
         try {
             oauthToken = await OauthClient.getToken();
         } catch (err) {
-            res.status(401).send('Access Token Error', err.message);
+            res.status(401).send(err.message);
         }
 
         const { region, idorslug, locale, gameMode } = req.query;
         if (!region || !idorslug) {
-            res.status(400).send('Bad request');
+            res.status(400).send('Bad Request');
         }
 
         const host = config.apiHosts[region];
@@ -43,12 +43,15 @@ const getCardByPage = async (req, res) => {
         try {
             oauthToken = await OauthClient.getToken();
         } catch (err) {
-            res.status(401).send('Access Token Error', err.message);
+            res.status(401).send(err.message);
         }
+
         const { region, page, sort, locale, textFilter } = req.query;
+        // if (!region || !page) {
+        //     res.status(400).send('Bad Request');
+        // }
 
         const host = config.apiHosts[region];
-
         const queryParams = new URLSearchParams({ 
             page: page,
             set: 'standard',
@@ -56,6 +59,7 @@ const getCardByPage = async (req, res) => {
             locale: locale,
         });
         if (textFilter) queryParams.append('textFilter', textFilter);
+
         const documentUri = `${host}/${hsCardsURL}?${queryParams}`;
         const headers = { Authorization: `Bearer ${reduceToken(oauthToken)}`};
 
@@ -64,7 +68,7 @@ const getCardByPage = async (req, res) => {
         });
 
         res.status(200).send(response);
-    } catch(err) {
+    } catch (err) {
         res.status(500).send('Internal Server Error');
     }
 }
