@@ -1,17 +1,35 @@
 .cardList {
-    display: flex;
-    flex-wrap: wrap;
-
     width: 100%;
     height: 100%;
+}
 
-    justify-content: space-between;
+.cardListSortSearch {
+    display: flex;
+    justify-content: space-around;
+    padding: 1rem 2rem;
+}
+
+.cardListSort {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .dropdown {
+        width: 8rem;
+    }
 }
 
 .cards {
     display: flex;
+    flex-wrap: wrap;
 
-    width: 12.5%;
+    justify-content: space-between;
+}
+
+.card {
+    display: flex;
+
+    width: 10%;
 }
 
 .cardImage {
@@ -19,4 +37,10 @@
     flex-wrap: wrap;
     
     width: 50%;
+}
+
+.cardListButtons {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 2rem;
 }

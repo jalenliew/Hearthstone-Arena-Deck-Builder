@@ -46,7 +46,6 @@ const DeckBuilderPage = () => {
     };
 
     const handleCreateConfirm = () => {
-        console.log(selectedClass);
         setModalIsOpen(false);
         navigate('new', { state: selectedClass });
     };

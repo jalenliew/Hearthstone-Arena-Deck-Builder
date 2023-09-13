@@ -7,6 +7,6 @@ const Button = ({ text, onClick, isDisabled }) => {
             {text}
         </button>
     );
-}
+};
 
 export default Button;
