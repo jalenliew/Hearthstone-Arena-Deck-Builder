@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, NavLink } from 'react-router-dom';
-import '../styles/Navbar.scss';
+import '../styles/components/Navbar.scss';
 
 const Navbar = () => {
 

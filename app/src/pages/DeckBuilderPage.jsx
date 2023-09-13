@@ -13,12 +13,11 @@ import Shaman from '../img/Shaman_icon.png';
 import Warlock from '../img/Warlock_icon.png';
 import Warrior from '../img/Warrior_icon.png';
 
-import '../styles/DeckBuilderPage.scss';
+import '../styles/pages/DeckBuilderPage.scss';
 
 const DeckBuilderPage = () => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [selectedClass, setSelectedClass] = useState(null);
-
     const navigate = useNavigate();
     
     const hsClasses = [

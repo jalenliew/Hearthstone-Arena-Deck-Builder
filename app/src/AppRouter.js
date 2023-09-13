@@ -8,6 +8,7 @@ import DeckBuilderPage from './pages/DeckBuilderPage';
 import CardListPage from './pages/CardListPage';
 import NoPage from './pages/NoPage';
 import CreateNewDeckPage from './pages/CreateNewDeckPage';
+import CardDetailsPage from './pages/CardDetailsPage';
 
 const AppRouter = () => {
 
@@ -22,7 +23,10 @@ const AppRouter = () => {
                         <Route index element={<DeckBuilderPage />} />
                         <Route path="new" element={<CreateNewDeckPage />} />
                     </Route>
-                    <Route path="cards" element={<CardListPage />} />
+                    <Route path="cards">
+                        <Route index element={<CardListPage />} />
+                        <Route path="details" element={<CardDetailsPage />} />
+                    </Route>
                     <Route path="*" element={<NoPage />} />
                 </Route>
             </Routes>

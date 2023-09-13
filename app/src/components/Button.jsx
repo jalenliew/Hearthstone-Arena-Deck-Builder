@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/Button.scss';
+import '../styles/components/Button.scss';
 
 const Button = ({ text, onClick, isDisabled }) => {
     return(

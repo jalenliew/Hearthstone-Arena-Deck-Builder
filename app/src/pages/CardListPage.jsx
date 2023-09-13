@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
 import Dropdown from 'react-dropdown';
 import Button from '../components/Button';
 import Searchbar from '../components/Searchbar';
 
-import '../styles/CardListPage.scss';
+import '../styles/pages/CardListPage.scss';
 import 'react-dropdown/style.css';
 
 // To do:
@@ -26,6 +27,7 @@ const CardListPage = () => {
         { value: 'health', label: 'HEALTH' },
         { value: 'class', label: 'CLASS' },
     ];
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchPage = async () => {
@@ -66,7 +68,11 @@ const CardListPage = () => {
 
     const handleSearch = (value) => {
         setSearchValue(value);
-    }
+    };
+
+    const handleCardDetails = (card) => {
+        navigate('details', { state: card });
+    };
 
     return(
         <div className='cardList'>
@@ -107,7 +113,11 @@ const CardListPage = () => {
                             id={card.id}
                             key={card.id}
                         >
-                            <img src={card.image} className='cardImage' />
+                            <img
+                                src={card.image}
+                                className='cardImage'
+                                onClick={() => handleCardDetails(card)}
+                            />
                         </div>
                     );
                 })}

@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/Searchbar.scss';
+import '../styles/components/Searchbar.scss';
 
 const Searchbar = ({ onClick }) => {
     const handleSearch = () => {

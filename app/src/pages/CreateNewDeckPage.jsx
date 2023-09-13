@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import Button from '../components/Button';
-import '../styles/CreateNewDeckPage.scss';
+import '../styles/pages/CreateNewDeckPage.scss';
 import axios from '../api/axios';
 
 const CreateNewDeckPage = () => {
