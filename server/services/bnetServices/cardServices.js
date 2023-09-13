@@ -47,9 +47,9 @@ const getCardByPage = async (req, res) => {
         }
 
         const { region, page, sort, locale, textFilter } = req.query;
-        // if (!region || !page) {
-        //     res.status(400).send('Bad Request');
-        // }
+        if (!region || !page) {
+            res.status(400).send('Bad Request');
+        }
 
         const host = config.apiHosts[region];
         const queryParams = new URLSearchParams({ 
