@@ -45,11 +45,17 @@ const getCardByPage = async (req, res) => {
         } catch (err) {
             res.status(401).send('Access Token Error', err.message);
         }
-        const { region, page } = req.query;
+        const { region, page, sort, locale, textFilter } = req.query;
 
         const host = config.apiHosts[region];
 
-        const queryParams = new URLSearchParams({ page: page });
+        const queryParams = new URLSearchParams({ 
+            page: page,
+            set: 'standard',
+            sort: sort,
+            locale: locale,
+        });
+        if (textFilter) queryParams.append('textFilter', textFilter);
         const documentUri = `${host}/${hsCardsURL}?${queryParams}`;
         const headers = { Authorization: `Bearer ${reduceToken(oauthToken)}`};
 
