@@ -37,7 +37,7 @@ const getCard = async (req, res) => {
 };
 
 
-const getCardByPage = async (req, res) => {
+const getCardPage = async (req, res) => {
     try {
         let oauthToken;
         try {
@@ -46,20 +46,39 @@ const getCardByPage = async (req, res) => {
             res.status(401).send(err.message);
         }
 
-        const { region, page, sort, locale, textFilter } = req.query;
+        // Destructuring req.query prevents data injections
+        const { 
+            region,
+            locale, set, cardClass, manaCost, attack,
+            health, collectible, rarity, type,
+            minionType, keyword, textFilter, gameMode,
+            spellSchool, page, pageSize, sort
+        } = req.query;
         if (!region || !page) {
             res.status(400).send('Bad Request');
         }
 
-        const host = config.apiHosts[region];
         const queryParams = new URLSearchParams({ 
-            page: page,
-            set: 'standard',
-            sort: sort,
-            locale: locale,
+            page: page || 1,
+            set: set || 'standard'
         });
+        if (locale) queryParams.append('locale', locale);
+        if (cardClass) queryParams.append('class', cardClass);
+        if (manaCost) queryParams.append('manaCost', manaCost);
+        if (attack) queryParams.append('attack', attack);
+        if (health) queryParams.append('health', health);
+        if (collectible) queryParams.append('collectible', collectible);
+        if (rarity) queryParams.append('rarity', rarity);
+        if (type) queryParams.append('type', type);
+        if (minionType) queryParams.append('minionType', minionType);
+        if (keyword) queryParams.append('keyword', keyword);
         if (textFilter) queryParams.append('textFilter', textFilter);
+        if (gameMode) queryParams.append('gameMode', gameMode);
+        if (spellSchool) queryParams.append('spellSchool', spellSchool);
+        if (pageSize) queryParams.append('pageSize', pageSize);
+        if (sort) queryParams.append('sort', sort);
 
+        const host = config.apiHosts[region];
         const documentUri = `${host}/${hsCardsURL}?${queryParams}`;
         const headers = { Authorization: `Bearer ${reduceToken(oauthToken)}`};
 
@@ -75,5 +94,5 @@ const getCardByPage = async (req, res) => {
 
 module.exports = {
     getCard,
-    getCardByPage
+    getCardPage
 }

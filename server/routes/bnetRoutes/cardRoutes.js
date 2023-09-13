@@ -3,6 +3,6 @@ const router = express.Router();
 const cardServices = require('../../services/bnetServices/cardServices');
 
 router.get('/single', cardServices.getCard);
-router.get('/page', cardServices.getCardByPage);
+router.get('/page', cardServices.getCardPage);
 
 module.exports = router;
