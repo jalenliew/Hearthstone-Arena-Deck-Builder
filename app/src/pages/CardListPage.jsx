@@ -29,7 +29,8 @@ const CardListPage = () => {
 
     useEffect(() => {
         const fetchPage = async () => {
-            const sortValue = `${sortOption}:${isAscending ? 'asc' : 'desc'}`;
+            const sortValue = isAscending ? `${sortOption}:asc` : `${sortOption}:desc`;
+
             const res = await axios.get('/bnet/cards/page', {
                 params: {
                     region: 'us',
@@ -106,15 +107,15 @@ const CardListPage = () => {
                             id={card.id}
                             key={card.id}
                         >
-                            <img src={card.image.en_US} className='cardImage' />
+                            <img src={card.image} className='cardImage' />
                         </div>
                     );
                 })}
             </div>
 
             <div className='cardListButtons'>
-                <Button text='Prev' onClick={handlePrev} isDisabled={cardPage < 2} />
-                <Button text='Next' onClick={handleNext} isDisabled={cardPage == maxPages} />
+                <Button text='Prev' onClick={handlePrev} isDisabled={pageNumber === 1} />
+                <Button text='Next' onClick={handleNext} isDisabled={pageNumber === maxPages} />
             </div>
         </div>
     );

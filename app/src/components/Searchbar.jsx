@@ -16,7 +16,9 @@ const Searchbar = ({ onClick }) => {
             {/* Replace below text with search icon */}
             <button
                 onClick={() => handleSearch()}
-            />
+            >
+                &#x1F50E;&#xFE0E;
+            </button>
         </div>
     );
 };
