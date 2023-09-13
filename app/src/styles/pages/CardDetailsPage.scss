@@ -9,6 +9,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
 }
 
 .keyword {
@@ -18,7 +19,14 @@
     flex-direction: column;
 
     background-color: #a99986;
-
     border: 1px solid black;
     border-radius: 5px;
+    margin: 2rem;
+
+    width: 100%;
+
+    p {
+        display: flex;
+        flex-wrap: wrap;
+    }
 }
