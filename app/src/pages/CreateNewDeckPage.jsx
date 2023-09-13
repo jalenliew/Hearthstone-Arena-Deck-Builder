@@ -11,12 +11,6 @@ const CreateNewDeckPage = () => {
     const [deck, setDeck] = useState([]);
 
     const handleCancel = async () => {
-        const res = await axios.get('/bnet/cards', {
-            params: {
-                idorslug: '52119-arch-villain-loser'
-            }
-        });
-        console.log(res);
         navigate(-1);
     };
 

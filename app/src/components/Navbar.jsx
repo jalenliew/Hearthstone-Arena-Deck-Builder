@@ -6,11 +6,11 @@ const Navbar = () => {
 
     return (
         <div className='navbar'>
-            <NavLink className={({ isActive }) => isActive ? "selected" : "unselected"} to="hearthstone-deckbuilder">
+            <NavLink className={({ isActive }) => isActive ? "selected" : "unselected"} to="hearthstone-deckbuilder/">
                 Home
             </NavLink>
             <NavLink className={({ isActive }) => isActive ? "selected" : "unselected"} to="hearthstone-deckbuilder/arena">
-                Arena Deck Builder
+                Arena Builder
             </NavLink>
             <NavLink className={({ isActive }) => isActive ? "selected" : "unselected"} to="hearthstone-deckbuilder/deck">
                 Deck Builder

@@ -1,8 +1,11 @@
 .App {
   text-align: center;
+
+  height: 100%;
 }
 
 body {
+  display: flex;
   position:fixed;
   padding:0;
   margin:0;
