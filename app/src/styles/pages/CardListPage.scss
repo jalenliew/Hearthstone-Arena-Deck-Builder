@@ -14,8 +14,9 @@
     justify-content: center;
     align-items: center;
 
-    .dropdown {
+    .select {
         width: 8rem;
+        margin:  0 1rem;
     }
 }
 
@@ -49,5 +50,36 @@
             width: 2rem;
             margin: 0 5px;
         }
+    }
+}
+
+.classModal {
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    margin-right: auto;
+    transform: translate(10%, 50%);
+
+    background-color: #F1E8D8;
+    width: 80%;
+
+    display: flex;
+    flex-direction: column;
+
+    h4{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .buttons {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        justify-content: space-between;
+
+        padding: 1rem;
+        box-sizing: border-box;
     }
 }

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
-import Dropdown from 'react-dropdown';
+import Select from 'react-select';
 import Button from '../components/Button';
+import Modal from 'react-modal';
 import Searchbar from '../components/Searchbar';
 
 import '../styles/pages/CardListPage.scss';
-import 'react-dropdown/style.css';
 
 // To do:
 // Supply a set based to prevent duplicates - https://hearthstone.fandom.com/wiki/Card_set#List
@@ -20,6 +20,8 @@ const CardListPage = () => {
     const [sortOption, setSortOption] = useState('name');
     const [isAscending, setIsAscending] = useState(true);
     const [searchValue, setSearchValue] = useState('');
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [filterParams, setFilterParams] = useState({});
     const sortOptions = [
         { value: 'name', label: 'NAME' },
         { value: 'manaCost', label: 'MANACOST' },
@@ -54,27 +56,9 @@ const CardListPage = () => {
     const handlePrev = () => {
         setPageNumber(pageNumber - 1);
     };
-
     const handleNext = () => {
         setPageNumber(pageNumber + 1);
     };
-
-    const handleSort = (value) => {
-        if (typeof value == 'boolean') {
-            setIsAscending(value);
-        } else {
-            setSortOption(value);
-        }
-    };
-
-    const handleSearch = (value) => {
-        setSearchValue(value);
-    };
-
-    const handleCardDetails = (card) => {
-        navigate('details', { state: card });
-    };
-
     const handlePageChange = () => {
         const page = document.getElementById('currentPage').value;
         if (page < 1) {
@@ -86,15 +70,58 @@ const CardListPage = () => {
         }
     };
 
+    const handleSort = (value) => {
+        if (typeof value == 'boolean') {
+            setIsAscending(value);
+        } else {
+            setSortOption(value);
+        }
+    };
+    const handleSearch = (value) => {
+        setSearchValue(value);
+    };
+
+    const handleCardDetails = (card) => {
+        navigate('details', { state: card });
+    };
+
+    const openModal = () => {
+        setModalIsOpen(true);
+    };
+    const closeModal = () => {
+        setModalIsOpen(false);
+    };
+
+    const handleFilter = () => {
+
+    };
+
     return(
         <div className='cardList'>
 
+            <Modal
+                isOpen={modalIsOpen}
+                className='classModal'
+                ariaHideApp={false}
+            >
+                <div className='advancedFilter'>
+                    <h4>Advanced Filters</h4>
+                    <input />
+                </div>
+                <div className='buttons'>
+                    <Button text='Cancel' onClick={closeModal} />
+                    <Button text='Apply' onClick={handleFilter} />
+                </div>
+            </Modal>
+
             <div className='cardListSortSearch' >
                 <div className='cardListSort'>
-                    <Dropdown
+                    <label htmlFor='sortSelect'> Sort by: </label>
+                    <Select
                         options={sortOptions}
-                        className='dropdown'
+                        className='select'
                         onChange={(e) => handleSort(e.value)}
+                        id='sortSelect'
                     />
                     <input
                         type='radio'
@@ -115,6 +142,7 @@ const CardListPage = () => {
                 <Searchbar
                     onClick={handleSearch}
                 />
+                <Button text='Advanced' onClick={openModal} />
             </div>
 
             <div className='cards' >

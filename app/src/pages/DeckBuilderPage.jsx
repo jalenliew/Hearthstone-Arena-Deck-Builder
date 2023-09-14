@@ -55,7 +55,7 @@ const DeckBuilderPage = () => {
             <Button text='Create New Deck' onClick={openModal} />
             <Modal
                 isOpen={modalIsOpen}
-                className="classModal"
+                className='classModal'
                 ariaHideApp={false}
             >
                 <h4>Pick a Class</h4>
