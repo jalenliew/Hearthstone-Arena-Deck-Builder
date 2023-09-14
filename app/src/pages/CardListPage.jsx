@@ -37,6 +37,7 @@ const CardListPage = () => {
                 params: {
                     region: 'us',
                     page: pageNumber,
+                    pageSize: 16,
                     sort: sortValue,
                     locale: 'en_US',
                     textFilter: searchValue
@@ -72,6 +73,17 @@ const CardListPage = () => {
 
     const handleCardDetails = (card) => {
         navigate('details', { state: card });
+    };
+
+    const handlePageChange = () => {
+        const page = document.getElementById('currentPage').value;
+        if (page < 1) {
+            setPageNumber(1);
+        } else if (page > maxPages) {
+            setPageNumber(maxPages);
+        } else {
+            setPageNumber(page);
+        }
     };
 
     return(
@@ -125,6 +137,16 @@ const CardListPage = () => {
 
             <div className='cardListButtons'>
                 <Button text='Prev' onClick={handlePrev} isDisabled={pageNumber === 1} />
+                <div className='cardListCurrentPage'>
+                    Page:
+                    <input
+                        type='text'
+                        value={pageNumber}
+                        id='currentPage'
+                        onChange={() => handlePageChange()}
+                    />
+                    of {maxPages}
+                </div>
                 <Button text='Next' onClick={handleNext} isDisabled={pageNumber === maxPages} />
             </div>
         </div>

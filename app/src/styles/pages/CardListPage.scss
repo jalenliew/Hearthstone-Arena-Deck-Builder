@@ -22,25 +22,32 @@
 .cards {
     display: flex;
     flex-wrap: wrap;
-
-    justify-content: space-between;
 }
 
 .card {
     display: flex;
+    justify-content: center;
 
-    width: 10%;
+    width: 12.5%;
 }
 
 .cardImage {
     display: flex;
     flex-wrap: wrap;
     
-    width: 50%;
+    width: 80%;
 }
 
 .cardListButtons {
     display: flex;
     justify-content: space-between;
     padding: 1rem 2rem;
+
+    .cardListCurrentPage {
+
+        input {
+            width: 2rem;
+            margin: 0 5px;
+        }
+    }
 }

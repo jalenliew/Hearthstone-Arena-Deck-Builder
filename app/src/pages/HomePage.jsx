@@ -8,13 +8,13 @@ const HomePage = () => {
                 About
             </h3>
             <p className="text">
-                This app is meant to help build Hearthstone decks.  The arena builder takes data from the top decks and suggests options to best match the top decks for that class
+                This app is meant to help build Hearthstone decks.  This app utilizes React, axios, NodeJS, Hearthstone API among other technologies to realize the project.
             </p>
             <h3 className="headers">
                 Purpose
             </h3>
             <p className="text">
-                This app is made for demonstration and learning purposes of my skills and abilities in web development and related ideas.  I have no claim on Hearthstone.
+                This app is made for demonstration and learning purposes of my skills and abilities in web development and related ideas.  I have no affiliation with Hearthstone or the parent company.
             </p>
         </div>
     );
