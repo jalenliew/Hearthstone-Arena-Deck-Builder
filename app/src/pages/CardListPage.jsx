@@ -22,6 +22,14 @@ const CardListPage = () => {
     const [searchValue, setSearchValue] = useState('');
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [filterParams, setFilterParams] = useState({});
+    const [metadata, setMetadata] = useState({});
+    const [selectedOptions, setSelectedOptions] = useState({});
+    const [collectible, setCollectible] = useState('f');
+    const [statsRange, setStatsRange] = useState({
+        manaCost: [0, 30, 0, 30],
+        attack: [0, 20, 0, 20],
+        health: [1, 20, 1, 20],
+    });
     const sortOptions = [
         { value: 'name', label: 'NAME' },
         { value: 'manaCost', label: 'MANACOST' },
@@ -42,7 +50,7 @@ const CardListPage = () => {
                     pageSize: 16,
                     sort: sortValue,
                     locale: 'en_US',
-                    textFilter: searchValue
+                    textFilter: searchValue,
                 }
             });
             
@@ -85,15 +93,85 @@ const CardListPage = () => {
         navigate('details', { state: card });
     };
 
-    const openModal = () => {
+    const openModal = async () => {
+        if (Object.keys(metadata).length === 0) {
+            const res = await axios.get('/bnet/metadata', {
+                params: {
+                    region: 'us',
+                    locale: 'en_US'
+                }
+            });
+            setMetadata(res.data);
+        }
         setModalIsOpen(true);
     };
     const closeModal = () => {
         setModalIsOpen(false);
     };
 
-    const handleFilter = () => {
+    const handleSelectOption = (param, values) => {
+        const val = values.map((value) => {
+            return value.slug;
+        });
+        setSelectedOptions({
+            ...selectedOptions,
+            [param]: val
+        });
+    };
+    const handleStats = (param) => {
+        const stat = param.slice(0, -3);
+        const isMinimum = (param.slice(-3) == 'Min' ? true : false);
+        const arr = statsRange[stat];
 
+        let min, max;
+
+        if (isMinimum) {
+            min = document.getElementById(param).value;
+            max = document.getElementById(`${stat}Max`).value;
+        } else {
+            min = document.getElementById(`${stat}Min`).value;
+            max = document.getElementById(param).value;
+        }
+        
+        min = parseInt(min);
+        max = parseInt(max);
+
+        if (min < statsRange[stat][2]) {
+            arr[0] = arr[2];
+            return;
+        } else if (statsRange[stat][3] < max) {
+            arr[1] = arr[3];
+            return;
+        } else {
+            if (max < min) {
+                if (isMinimum) {
+                    arr[0] = arr[1];
+                } else {
+                    arr[1] = arr[0];
+                }
+            } else {
+                arr[0] = min;
+                arr[1] = max;
+            }
+    
+            setStatsRange({
+                ...statsRange,
+                [stat]: arr
+            });
+        }
+    };
+
+    const handleCollectible = (value) => {
+        setCollectible(value);
+    };
+
+    const handleFilterReset = () => {
+        setFilterParams({});
+        setModalIsOpen(false);
+    };
+    const handleFilterApply = () => {
+
+        setModalIsOpen(false);
     };
 
     return(
@@ -104,13 +182,180 @@ const CardListPage = () => {
                 className='classModal'
                 ariaHideApp={false}
             >
+                <h4>Advanced Filters</h4>
                 <div className='advancedFilter'>
-                    <h4>Advanced Filters</h4>
-                    <input />
+                    <div className='selectWrapper'>
+                        <label htmlFor='setSelect'>Set:</label>
+                        <Select
+                            options={metadata.sets?.map((set) => {
+                                return {
+                                    ...set,
+                                    label: set.name,
+                                    value: set.slug
+                                };
+                            })}
+                            onChange={(e) => {handleSelectOption('set', e)}}
+                            isMulti
+                            className='select'
+                            id='setSelect'
+                        />
+                    </div>
+                    <div className='selectWrapper'>
+                        <label htmlFor='classSelect'>Class:</label>
+                        <Select
+                            options={metadata.classes?.map((cardClass) => {
+                                return {
+                                    ...cardClass,
+                                    label: cardClass.name,
+                                    value: cardClass.slug
+                                };
+                            })}
+                            onChange={(e) => {handleSelectOption('class', e)}}
+                            isMulti
+                            className='select'
+                            id='classSelect'
+                        />
+                    </div>
+                    <div className='statsWrapper'>
+                        <div className='manaCost'>
+                            <input
+                                type='number'
+                                id='manaCostMin'
+                                value={statsRange.manaCost[0]}
+                                onChange={() => handleStats('manaCostMin')}
+                            />
+                            <p> &le; MANACOST &le; </p>
+                            <input
+                                type='number'
+                                id='manaCostMax'
+                                value={statsRange.manaCost[1]}
+                                onChange={() => handleStats('manaCostMax')}
+                            />
+                        </div>
+                        <div className='attack'>
+                            <input
+                                type='number'
+                                id='attackMin'
+                                value={statsRange.attack[0]}
+                                onChange={() => handleStats('attackMin')}
+                            />
+                            <p> &le;&emsp; ATTACK &emsp;&le; </p>
+                            <input
+                                type='number'
+                                id='attackMax'
+                                value={statsRange.attack[1]}
+                                onChange={() => handleStats('attackMax')}
+                            />
+                        </div>
+                        <div className='health'>
+                            <input
+                                type='number'
+                                id='healthMin'
+                                value={statsRange.health[0]}
+                                onChange={() => handleStats('healthMin')}
+                            />
+                            <p> &le;&emsp; HEALTH &emsp;&le; </p>
+                            <input
+                                type='number'
+                                id='healthMax'
+                                value={statsRange.health[1]}
+                                onChange={() => handleStats('healthMax')}
+                            />
+                        </div>
+                    </div>
+                    <div className='collectible'>
+                        <p> Show Non-Collectible Cards: </p>
+                        <input
+                            type='radio'
+                            id='collectibleTrue'
+                            checked={collectible === 't'}
+                            onChange={() => handleCollectible('t')}
+                        />
+                        <label htmlFor='collectibleTrue'>True</label>
+                        <input
+                            type='radio'
+                            id='collectibleFalse'
+                            checked={collectible === 'f'}
+                            onChange={() => handleCollectible('f')}
+                        />
+                        <label htmlFor='collectibleFalse' >False</label>
+                        <input
+                            type='radio'
+                            id='collectibleOnly'
+                            checked={collectible === 'o'}
+                            onChange={() => handleCollectible('o')}
+                        />
+                        <label htmlFor='collectibleOnly'>Only Non-Collectible</label>
+                    </div>
+                    <div className='selectWrapper'>
+                        <label htmlFor='raritySelect'>Rarity:</label>
+                        <Select
+                            options={metadata.rarities?.map((rarity) => {
+                                return {
+                                    ...rarity,
+                                    label: rarity.name,
+                                    value: rarity.slug
+                                };
+                            })}
+                            onChange={(e) => {handleSelectOption('rarity', e)}}
+                            isMulti
+                            className='select'
+                            id='raritySelect'
+                        />
+                    </div>
+                    <div className='selectWrapper'>
+                        <label htmlFor='typeSelect'>Type:</label>
+                        <Select
+                            options={metadata.types?.map((type) => {
+                                return {
+                                    ...type,
+                                    label: type.name,
+                                    value: type.slug
+                                };
+                            })}
+                            onChange={(e) => {handleSelectOption('type', e)}}
+                            isMulti
+                            className='select'
+                            id='typeSelect'
+                        />
+                    </div>
+                    <div className='selectWrapper'>
+                        <label htmlFor='minionTypeSelect'>Minion Type:</label>
+                        <Select
+                            options={metadata.minionTypes?.map((minionType) => {
+                                return {
+                                    ...minionType,
+                                    label: minionType.name,
+                                    value: minionType.slug
+                                };
+                            })}
+                            onChange={(e) => {handleSelectOption('minionType', e)}}
+                            isMulti
+                            className='select'
+                            id='minionTypeSelect'
+                        />
+                    </div>
+                    <div className='selectWrapper'>
+                        <label htmlFor='keywordSelect'>Keyword:</label>
+                        <Select
+                            options={metadata.keywords?.map((keyword) => {
+                                return {
+                                    ...keyword,
+                                    label: keyword.name,
+                                    value: keyword.slug
+                                };
+                            })}
+                            onChange={(e) => {handleSelectOption('keyword', e)}}
+                            isMulti
+                            className='select'
+                            id='keywordSelect'
+                        />
+                    </div>
                 </div>
                 <div className='buttons'>
                     <Button text='Cancel' onClick={closeModal} />
-                    <Button text='Apply' onClick={handleFilter} />
+                    <Button text='Reset' onClick={handleFilterReset} />
+                    <Button text='Apply' onClick={handleFilterApply} />
                 </div>
             </Modal>
 

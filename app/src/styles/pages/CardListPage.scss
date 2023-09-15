@@ -7,36 +7,37 @@
     display: flex;
     justify-content: space-around;
     padding: 1rem 2rem;
-}
 
-.cardListSort {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    .cardListSort {
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
-    .select {
-        width: 8rem;
-        margin:  0 1rem;
+        .select {
+            width: 8rem;
+            margin:  0 1rem;
+        }
     }
 }
 
 .cards {
     display: flex;
     flex-wrap: wrap;
-}
 
-.card {
-    display: flex;
-    justify-content: center;
+    .card {
+        display: flex;
+        justify-content: center;
 
-    width: 12.5%;
-}
+        width: 12.5%;
+        
 
-.cardImage {
-    display: flex;
-    flex-wrap: wrap;
-    
-    width: 80%;
+        .cardImage {
+            display: flex;
+            flex-wrap: wrap;
+            
+            width: 80%;
+        }
+    }
 }
 
 .cardListButtons {
@@ -59,7 +60,7 @@
     right: auto;
     bottom: auto;
     margin-right: auto;
-    transform: translate(10%, 50%);
+    transform: translate(10%, 5%);
 
     background-color: #F1E8D8;
     width: 80%;
@@ -81,5 +82,51 @@
 
         padding: 1rem;
         box-sizing: border-box;
+    }
+
+    .selectWrapper {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+
+        width: 100%;
+
+        .select {
+            width: 80%;
+            margin: 0.5rem 1rem;
+        }
+    }
+    .statsWrapper {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        
+        div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            width: 100%;
+            margin: 0.5rem 0;
+
+            p {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                margin: 0;
+                width: 20%;
+            }
+            input {
+                width: 10%;
+            }
+        }
+    }
+    .collectible {
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 }
