@@ -9,6 +9,7 @@ import '../styles/pages/CardDetailsPage.scss';
 const CardDetailsPage = () => {
     const [keywordData, setKeywordData] = useState([]);
     const location = useLocation();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchKeywords = async () => {
@@ -29,17 +30,21 @@ const CardDetailsPage = () => {
         }
     }, [location]);
 
+    const handleBack = () => {
+        navigate(-1);
+    }
+
     return (
-        <div>
+        <div className='cardDetailsPage' >
+            <Button text='Go Back' onClick={handleBack} />
             { location.state?.id ? (
                 <div className='cardDetails'>
                     <img src={location.state.image} />
                     <div className='keywordWrapper' >
                         {keywordData?.map((keyword, index) => {
                             return (
-                                <div key={keyword} className='keyword' >
+                                <div key={keyword.name.en_US} className='keyword' >
                                     <b>{keyword.name.en_US}</b>
-                                    {console.log(keyword)}
                                     <p>{keyword.refText.en_US}</p>
                                 </div>
                             );

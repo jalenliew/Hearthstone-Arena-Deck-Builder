@@ -30,3 +30,13 @@
         flex-wrap: wrap;
     }
 }
+
+.cardDetailsPage {
+    display: flex;
+    justify-content: center;
+
+    Button {
+        
+        margin: 2rem;
+    }
+}
