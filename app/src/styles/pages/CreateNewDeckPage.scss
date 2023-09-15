@@ -1,14 +1,31 @@
 .createNewDeck {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    width: 100%;
+    width: 90%;
     flex-wrap: wrap;
-}
 
-.currentDeck {
-    display: flex;
-    flex-direction: column;
+    .cardListPage {
+        width: 70%;
+        height: 50%;
+    }
+
+    .currentDeck {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        img {
+            height: 50%;
+            width: 50%;
+        }
+
+        .currentDeckCards {
+            height: 15rem;
+            overflow: visible;
+        }
+    }
 }
 
 .buttons {
@@ -17,4 +34,38 @@
     flex-direction: row;
     justify-content: space-between;
     padding: 0 1rem;
+}
+
+.createNewDeckPage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cardDetailsModal {
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    margin-right: auto;
+    transform: translate(10%, 5%);
+
+    background-color: #F1E8D8;
+    width: 80%;
+
+    .addCards {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        padding: 2rem 0;
+
+        p {
+            margin: 0 2rem;
+        }
+        .Button {
+            width: 2rem;
+            height: 2rem;
+        }
+    }
 }

@@ -26,10 +26,7 @@
 
     .card {
         display: flex;
-        justify-content: center;
-
-        width: 12.5%;
-        
+        justify-content: center;        
 
         .cardImage {
             display: flex;
@@ -54,7 +51,7 @@
     }
 }
 
-.classModal {
+.advancedFilterModal {
     top: auto;
     left: auto;
     right: auto;

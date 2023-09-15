@@ -8,12 +8,7 @@ import Searchbar from '../components/Searchbar';
 
 import '../styles/pages/CardListPage.scss';
 
-// To do:
-// Supply a set based to prevent duplicates - https://hearthstone.fandom.com/wiki/Card_set#List
-// Create Sidenav to change the card set
-// Update backend call to reflect this
-
-const CardListPage = () => {
+const CardListPage = ({ pageSize, onCardClick }) => {
     const [pageNumber, setPageNumber] = useState(1);
     const [cardPage, setCardPage] = useState([]);
     const [maxPages, setMaxPages] = useState(0);
@@ -54,7 +49,7 @@ const CardListPage = () => {
                 params: {
                     region: 'us',
                     page: pageNumber,
-                    pageSize: 16,
+                    pageSize: pageSize || 16,
                     sort: sortValue,
                     locale: 'en_US',
                     textFilter: searchValue,
@@ -99,7 +94,11 @@ const CardListPage = () => {
     };
 
     const handleCardDetails = (card) => {
-        navigate('details', { state: card });
+        if (onCardClick) {
+            onCardClick(card);
+        } else {
+            navigate('details', { state: card });
+        }
     };
 
     const openModal = async () => {
@@ -250,7 +249,7 @@ const CardListPage = () => {
 
             <Modal
                 isOpen={modalIsOpen}
-                className='classModal'
+                className='advancedFilterModal'
                 ariaHideApp={false}
             >
                 <h4>Advanced Filters</h4>
@@ -471,7 +470,7 @@ const CardListPage = () => {
                 <Button text='Advanced' onClick={openModal} />
             </div>
 
-            <div className='cards' >
+            <div className='cards'>
                 {cardPage.map((card) => {
                     if (card === 'N/A') {
                         return (
@@ -485,6 +484,7 @@ const CardListPage = () => {
                             className='card'
                             id={card.id}
                             key={card.id}
+                            style={{width: `${100 / ((pageSize || 16) / 2)}%`}} 
                         >
                             <img
                                 src={card.image}

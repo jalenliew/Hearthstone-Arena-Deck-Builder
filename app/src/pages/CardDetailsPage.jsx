@@ -6,7 +6,7 @@ import Button from '../components/Button';
 
 import '../styles/pages/CardDetailsPage.scss';
 
-const CardDetailsPage = () => {
+const CardDetailsPage = ({ card, onBackButton }) => {
     const [keywordData, setKeywordData] = useState([]);
     const location = useLocation();
     const navigate = useNavigate();
@@ -21,25 +21,33 @@ const CardDetailsPage = () => {
 
             setKeywordData(
                 res.data.filter((keyword) => {
-                    return location.state.keywordIds.includes(keyword.id);
+                    if (card) {
+                        return card.keywordIds.includes(keyword.id);
+                    } else {
+                        return location.state.keywordIds.includes(keyword.id);
+                    }
             }));
         }
         
-        if (location.state?.keywordIds?.length > 0) {
+        if ((location.state?.keywordIds?.length > 0) || (card.keywordIds?.length > 0)) {
             fetchKeywords();
         }
-    }, [location]);
+    }, [location, card]);
 
     const handleBack = () => {
-        navigate(-1);
+        if (onBackButton) {
+            onBackButton();
+        } else {
+            navigate(-1);
+        }
     }
 
     return (
         <div className='cardDetailsPage' >
             <Button text='Go Back' onClick={handleBack} />
-            { location.state?.id ? (
+            { (location.state?.id) || card ? (
                 <div className='cardDetails'>
-                    <img src={location.state.image} alt={location.state.name}/>
+                    <img src={(location.state.image) || (card.image)} alt={(location.state.name) || (card.name)}/>
                     <div className='keywordWrapper' >
                         {keywordData?.map((keyword, index) => {
                             return (
