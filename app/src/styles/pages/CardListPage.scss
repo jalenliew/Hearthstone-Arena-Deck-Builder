@@ -122,6 +122,9 @@
             input {
                 width: 10%;
             }
+            Button {
+                margin: 0 2rem;
+            }
         }
     }
     .collectible {
@@ -129,4 +132,12 @@
         align-items: center;
         justify-content: center;
     }
+}
+
+.noCardsFound {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
 }

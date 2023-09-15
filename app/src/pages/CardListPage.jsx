@@ -23,7 +23,14 @@ const CardListPage = () => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [filterParams, setFilterParams] = useState({});
     const [metadata, setMetadata] = useState({});
-    const [selectedOptions, setSelectedOptions] = useState({});
+    const [selectedOptions, setSelectedOptions] = useState({
+        set: [],
+        class: [],
+        rarity: [],
+        type: [],
+        minionType: [],
+        keyword: []
+    });
     const [collectible, setCollectible] = useState('f');
     const [statsRange, setStatsRange] = useState({
         manaCost: [0, 30, 0, 30],
@@ -51,15 +58,17 @@ const CardListPage = () => {
                     sort: sortValue,
                     locale: 'en_US',
                     textFilter: searchValue,
+                    ...filterParams
                 }
             });
             
             setMaxPages(res.data.pageCount);
             setCardPage(res.data.cards);
+            if (res.data.cards.length === 0) setCardPage(['N/A']);
         }
 
         fetchPage();
-    }, [pageNumber, isAscending, sortOption, searchValue]);
+    }, [pageNumber, isAscending, sortOption, searchValue, filterParams]);
 
     const handlePrev = () => {
         setPageNumber(pageNumber - 1);
@@ -110,17 +119,14 @@ const CardListPage = () => {
     };
 
     const handleSelectOption = (param, values) => {
-        const val = values.map((value) => {
-            return value.slug;
-        });
         setSelectedOptions({
             ...selectedOptions,
-            [param]: val
+            [param]: values
         });
     };
     const handleStats = (param) => {
         const stat = param.slice(0, -3);
-        const isMinimum = (param.slice(-3) == 'Min' ? true : false);
+        const isMinimum = (param.slice(-3) === 'Min' ? true : false);
         const arr = statsRange[stat];
 
         let min, max;
@@ -136,29 +142,54 @@ const CardListPage = () => {
         min = parseInt(min);
         max = parseInt(max);
 
-        if (min < statsRange[stat][2]) {
-            arr[0] = arr[2];
-            return;
-        } else if (statsRange[stat][3] < max) {
-            arr[1] = arr[3];
-            return;
-        } else {
+        if (isMinimum) {
             if (max < min) {
-                if (isMinimum) {
-                    arr[0] = arr[1];
+                if (statsRange[stat][3] < min) {
+                    arr[0] = arr[3];
+                    arr[1] = arr[3];
                 } else {
-                    arr[1] = arr[0];
+                    arr[0] = min;
+                    arr[1] = min;
                 }
             } else {
-                arr[0] = min;
-                arr[1] = max;
+                if (min < statsRange[stat][2]) {
+                    arr[0] = arr[2];
+                } else {
+                    arr[0] = min;
+                    arr[1] = max;
+                }
             }
-    
-            setStatsRange({
-                ...statsRange,
-                [stat]: arr
-            });
+        } else {
+            if (max < min) {
+                if (max < statsRange[stat][2]) {
+                    arr[1] = arr[2];
+                } else {
+                    arr[0] = max;
+                    arr[1] = max;    
+                }
+            } else {
+                if (statsRange[stat][3] < max) {
+                    arr[1] = arr[3];
+                } else {
+                    arr[0] = min;
+                    arr[1] = max;
+                }
+            }
         }
+
+        setStatsRange({
+            ...statsRange,
+            [stat]: arr
+        });
+    };
+    const handleStatsReset = (param) => {
+        const arr = statsRange[param];
+        arr[0] = arr[2];
+        arr[1] = arr[3];
+        setStatsRange({
+            ...statsRange,
+            [param]: arr
+        });
     };
 
     const handleCollectible = (value) => {
@@ -167,10 +198,50 @@ const CardListPage = () => {
 
     const handleFilterReset = () => {
         setFilterParams({});
-        setModalIsOpen(false);
+        setSelectedOptions({
+            set: [],
+            class: [],
+            rarity: [],
+            type: [],
+            minionType: [],
+            keyword: []
+        });
+        setCollectible('f');
+        setStatsRange({
+            manaCost: [0, 30, 0, 30],
+            attack: [0, 20, 0, 20],
+            health: [1, 20, 1, 20]
+        });
     };
     const handleFilterApply = () => {
+        let selectValues = {};
+        Object.keys(selectedOptions).forEach((param) => {
+            selectValues[param] = selectedOptions[param].map((value) => {
+                return value.slug;
+            });
+        });
+        let collectibleVal;
+        if (collectible === 't') {
+            collectibleVal = [0, 1];
+        } else if (collectible === 'o') {
+            collectibleVal = 0;
+        }
+        let statsValues = {
+            manaCost: [],
+            attack: [],
+            health: []
+        };
+        Object.keys(statsRange).forEach((stat) => {
+            for (let i = statsRange[stat][0], j = 0; i < statsRange[stat][1]; i++, j++) {
+                statsValues[stat][j] = i;
+            }
+        });
 
+        setFilterParams({
+            ...selectValues,
+            collectible: collectibleVal,
+            ...statsValues
+        });
         setModalIsOpen(false);
     };
 
@@ -195,6 +266,7 @@ const CardListPage = () => {
                                 };
                             })}
                             onChange={(e) => {handleSelectOption('set', e)}}
+                            value={selectedOptions.set}
                             isMulti
                             className='select'
                             id='setSelect'
@@ -211,6 +283,7 @@ const CardListPage = () => {
                                 };
                             })}
                             onChange={(e) => {handleSelectOption('class', e)}}
+                            value={selectedOptions.class}
                             isMulti
                             className='select'
                             id='classSelect'
@@ -221,46 +294,49 @@ const CardListPage = () => {
                             <input
                                 type='number'
                                 id='manaCostMin'
-                                value={statsRange.manaCost[0]}
+                                value={isNaN(statsRange.manaCost[0]) ? '' : statsRange.manaCost[0]}
                                 onChange={() => handleStats('manaCostMin')}
                             />
                             <p> &le; MANACOST &le; </p>
                             <input
                                 type='number'
                                 id='manaCostMax'
-                                value={statsRange.manaCost[1]}
+                                value={isNaN(statsRange.manaCost[1]) ? '' : statsRange.manaCost[1]}
                                 onChange={() => handleStats('manaCostMax')}
                             />
+                            <Button text='Reset' onClick={() => handleStatsReset('manaCost')} />
                         </div>
                         <div className='attack'>
                             <input
                                 type='number'
                                 id='attackMin'
-                                value={statsRange.attack[0]}
+                                value={isNaN(statsRange.attack[0]) ? '' : statsRange.attack[0]}
                                 onChange={() => handleStats('attackMin')}
                             />
                             <p> &le;&emsp; ATTACK &emsp;&le; </p>
                             <input
                                 type='number'
                                 id='attackMax'
-                                value={statsRange.attack[1]}
+                                value={isNaN(statsRange.attack[1]) ? '' : statsRange.attack[1]}
                                 onChange={() => handleStats('attackMax')}
                             />
+                            <Button text='Reset' onClick={() => handleStatsReset('attack')} />
                         </div>
                         <div className='health'>
                             <input
                                 type='number'
                                 id='healthMin'
-                                value={statsRange.health[0]}
+                                value={isNaN(statsRange.health[0]) ? '' : statsRange.health[0]}
                                 onChange={() => handleStats('healthMin')}
                             />
                             <p> &le;&emsp; HEALTH &emsp;&le; </p>
                             <input
                                 type='number'
                                 id='healthMax'
-                                value={statsRange.health[1]}
+                                value={isNaN(statsRange.health[1]) ? '' : statsRange.health[1]}
                                 onChange={() => handleStats('healthMax')}
                             />
+                            <Button text='Reset' onClick={() => handleStatsReset('health')} />
                         </div>
                     </div>
                     <div className='collectible'>
@@ -298,6 +374,7 @@ const CardListPage = () => {
                                 };
                             })}
                             onChange={(e) => {handleSelectOption('rarity', e)}}
+                            value={selectedOptions.rarity}
                             isMulti
                             className='select'
                             id='raritySelect'
@@ -314,6 +391,7 @@ const CardListPage = () => {
                                 };
                             })}
                             onChange={(e) => {handleSelectOption('type', e)}}
+                            value={selectedOptions.type}
                             isMulti
                             className='select'
                             id='typeSelect'
@@ -330,6 +408,7 @@ const CardListPage = () => {
                                 };
                             })}
                             onChange={(e) => {handleSelectOption('minionType', e)}}
+                            value={selectedOptions.minionType}
                             isMulti
                             className='select'
                             id='minionTypeSelect'
@@ -346,6 +425,7 @@ const CardListPage = () => {
                                 };
                             })}
                             onChange={(e) => {handleSelectOption('keyword', e)}}
+                            value={selectedOptions.keyword}
                             isMulti
                             className='select'
                             id='keywordSelect'
@@ -365,8 +445,9 @@ const CardListPage = () => {
                     <Select
                         options={sortOptions}
                         className='select'
-                        onChange={(e) => handleSort(e.value)}
+                        onChange={(e) => handleSort(e)}
                         id='sortSelect'
+                        defaultValue={{ value: 'name', label: 'NAME' }}
                     />
                     <input
                         type='radio'
@@ -392,6 +473,13 @@ const CardListPage = () => {
 
             <div className='cards' >
                 {cardPage.map((card) => {
+                    if (card === 'N/A') {
+                        return (
+                            <h2 className='noCardsFound'>
+                                No Cards Found
+                            </h2>
+                        );
+                    }
                     return (
                         <div
                             className='card'
