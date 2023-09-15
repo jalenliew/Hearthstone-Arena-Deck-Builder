@@ -39,7 +39,7 @@ const CardDetailsPage = () => {
             <Button text='Go Back' onClick={handleBack} />
             { location.state?.id ? (
                 <div className='cardDetails'>
-                    <img src={location.state.image} />
+                    <img src={location.state.image} alt={location.state.name}/>
                     <div className='keywordWrapper' >
                         {keywordData?.map((keyword, index) => {
                             return (
