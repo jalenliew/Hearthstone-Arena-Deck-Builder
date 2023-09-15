@@ -16,14 +16,18 @@ const getCard = async (req, res) => {
             res.status(401).send(err.message);
         }
 
-        const { region, idorslug, locale, gameMode } = req.query;
+        const { region, locale, gameMode } = req.query;
+        const idorslug = req.params.idorslug;
         if (!region || !idorslug) {
             res.status(400).send('Bad Request');
         }
 
-        const host = config.apiHosts[region];
+        const queryParams = new URLSearchParams();
+        if (locale) queryParams.append('locale', locale);
+        if (gameMode) queryParams.append('gameMode', gameMode);
 
-        const documentUri = `${host}/${hsCardsURL}/${idorslug}`;
+        const host = config.apiHosts[region];
+        const documentUri = `${host}/${hsCardsURL}/${idorslug}?${queryParams}`;
         const headers = { Authorization: `Bearer ${reduceToken(oauthToken)}` };
 
         const response = await fetch(documentUri, { headers }).then((readableStream) => {

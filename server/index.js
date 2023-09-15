@@ -31,11 +31,11 @@ app.get('/oauth/battlenet/callback',
       res.redirect('/');
 });
 
-app.get('/ouath/test', passport.authenticate('bnet'));
-
 const bnetRoutes = require('./routes/bnetRoutes');
+const appRoutes = require('./routes/appRoutes');
 
 app.use('/bnet', bnetRoutes);
+app.use('/app', appRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
